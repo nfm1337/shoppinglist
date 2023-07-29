@@ -1,10 +1,12 @@
 package ru.nfm.shoppinglist.presentation
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.nfm.shoppinglist.R
 import ru.nfm.shoppinglist.domain.ShopItem
@@ -12,10 +14,13 @@ import java.lang.RuntimeException
 
 class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
 
+    var count = 0
     var shopList = listOf<ShopItem>()
         set(value) {
+            val callback = ShopListDiffCallback(shopList, value)
+            val diffResult = DiffUtil.calculateDiff(callback)
+            diffResult.dispatchUpdatesTo(this)
             field = value
-            notifyDataSetChanged()
         }
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
@@ -33,6 +38,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     }
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
+        Log.d("ShopListAdapter", "onBindViewHolder, count ${++count}")
         val shopItem = shopList[position]
         holder.itemView.setOnLongClickListener {
             onShopItemLongClickListener?.invoke(shopItem)
