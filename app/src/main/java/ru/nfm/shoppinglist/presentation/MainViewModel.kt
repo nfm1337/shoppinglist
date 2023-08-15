@@ -1,15 +1,16 @@
 package ru.nfm.shoppinglist.presentation
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import ru.nfm.shoppinglist.data.ShopListRepositoryImpl
 import ru.nfm.shoppinglist.domain.DeleteShopItemUseCase
 import ru.nfm.shoppinglist.domain.EditShopItemUseCase
 import ru.nfm.shoppinglist.domain.GetShopListUseCase
 import ru.nfm.shoppinglist.domain.ShopItem
 
-class MainViewModel : ViewModel() {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository  = ShopListRepositoryImpl
+    private val repository  = ShopListRepositoryImpl(application)
 
     private val getShopListUseCase = GetShopListUseCase(repository)
     private val deleteShopItemUseCase = DeleteShopItemUseCase(repository)
