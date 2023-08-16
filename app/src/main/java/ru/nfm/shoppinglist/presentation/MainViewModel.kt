@@ -2,6 +2,8 @@ package ru.nfm.shoppinglist.presentation
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import ru.nfm.shoppinglist.data.ShopListRepositoryImpl
 import ru.nfm.shoppinglist.domain.DeleteShopItemUseCase
 import ru.nfm.shoppinglist.domain.EditShopItemUseCase
@@ -19,11 +21,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val shopList = getShopListUseCase.getShopList()
 
     fun deleteShopItem(shopItem: ShopItem) {
-        deleteShopItemUseCase.deleteShopItem(shopItem)
+        viewModelScope.launch {
+            deleteShopItemUseCase.deleteShopItem(shopItem)
+        }
     }
 
     fun changeEnableState(shopItem: ShopItem) {
-        val newItem = shopItem.copy(enabled = !shopItem.enabled)
-        editShopListUseCase.editShopItem(newItem)
+        viewModelScope.launch {
+            val newItem = shopItem.copy(enabled = !shopItem.enabled)
+            editShopListUseCase.editShopItem(newItem)
+        }
     }
 }
